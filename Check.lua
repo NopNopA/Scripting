@@ -1,4 +1,10 @@
 repeat wait() until game:IsLoaded()
+
+for i = 1, 30 do
+    print("[❕] Waiting Check", i)
+    wait(1)
+end
+
 local function Check()
     print("[❕] Checking")
     if game.Players.LocalPlayer.PlayerGui:FindFirstChild('Anime Defenders') then
