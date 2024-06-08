@@ -28,7 +28,7 @@ task.spawn(function()
     for i = 1, 100 do
         print("[❕] Check ", i)
         if Check() then
-            return
+            break
         end
         wait(1)
     end
