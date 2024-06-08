@@ -12,7 +12,7 @@ local function Check()
         print("[❕] Running > True")
         return
     else
-        for j = 1, 30 do
+        for j = 1, 60 do
             print("[❕] Checking times ", j)
             if game.Players.LocalPlayer.PlayerGui:FindFirstChild('Anime Defenders') then
                 print("[❕] Running > True")
