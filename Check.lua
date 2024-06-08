@@ -1,6 +1,3 @@
-repeat wait() until game:IsLoaded()
-
-
 for i = 1, 25 do
     print("[❕] Waiting Check", i)
     wait(1)
