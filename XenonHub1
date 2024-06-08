@@ -1,1 +1,11 @@
-
+if not game:IsLoaded() then repeat game.Loaded:Wait() until game:IsLoaded() end
+getgenv().Configuration = {
+    ['Enabled'] = true,
+    ['Enabled Challenge'] = false,
+    ['PC Name'] = 'NopNopA',
+    ['Delay'] = 30,
+    ['Leave Delay'] = 5,
+    ['Leave At Wave'] = 31,
+    ['Leave Method'] = 2,
+};
+loadstring(game:HttpGet('https://raw.githubusercontent.com/Xenon-Trash/Loader/main/Loader.lua')){124945521347}
