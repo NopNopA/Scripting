@@ -1,5 +1,10 @@
-repeat task.wait() until game:IsLoaded()
-
-local url = "https://raw.githubusercontent.com/NopNopA/Scripting/main/XenonHub1"
-
-loadstring(game:HttpGet'https://raw.githubusercontent.com/NopNopA/NopNopA/main/Scripting')()
+getgenv().Configuration = {
+    ['Enabled'] = true,
+    ['Enabled Challenge'] = false,
+    ['PC Name'] = 'NopNopA',
+    ['Delay'] = 30,
+    ['Leave Delay'] = 5,
+    ['Leave At Wave'] = 31,
+    ['Leave Method'] = 2,
+};
+loadstring(game:HttpGet('https://raw.githubusercontent.com/Xenon-Trash/Loader/main/Loader.lua')){124945521347}
