@@ -11,3 +11,12 @@ getgenv().Configuration = {
     ['Leave Method'] = 2,
 };
 loadstring(game:HttpGet('https://raw.githubusercontent.com/Xenon-Trash/Loader/main/Loader.lua')){274948750000}
+
+task.spawn(function()
+    wait(100)
+    if game.Players.LocalPlayer.PlayerGui:FindFirstChild('Anime Defenders') then
+        print("Check")
+    else
+        game.Players.LocalPlayer:Kick('Check Scripting')
+    end
+end) 
