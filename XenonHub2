@@ -11,20 +11,4 @@ getgenv().Configuration = {
     ['Leave Method'] = 2,
 };
 loadstring(game:HttpGet('https://raw.githubusercontent.com/Xenon-Trash/Loader/main/Loader.lua')){274948750000}
-
-local function Check()
-    print("[❕] Checking")
-    if game.Players.LocalPlayer.PlayerGui:FindFirstChild('Anime Defenders') then
-        print("[❕] Running > True")
-    else
-        game.Players.LocalPlayer:Kick('Check Scripting')
-    end
-end
-
-task.spawn(function()
-    for i = 1, 100 do
-        print("[❕] Check ", i)
-        Check()
-        wait(1)
-    end
-end)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/NopNopA/Scripting/main/Check.lua"))()
