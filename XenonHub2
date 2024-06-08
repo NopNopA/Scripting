@@ -1,1 +1,13 @@
+repeat wait() until game:IsLoaded()
+wait(5) 
 
+getgenv().Configuration = {
+    ['Enabled'] = true,
+    ['Enabled Challenge'] = false,
+    ['PC Name'] = 'NopNopA',
+    ['Delay'] = 30,
+    ['Leave Delay'] = 5,
+    ['Leave At Wave'] = 31,
+    ['Leave Method'] = 2,
+};
+loadstring(game:HttpGet('https://raw.githubusercontent.com/Xenon-Trash/Loader/main/Loader.lua')){274948750000}
