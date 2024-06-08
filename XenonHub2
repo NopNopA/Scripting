@@ -12,11 +12,19 @@ getgenv().Configuration = {
 };
 loadstring(game:HttpGet('https://raw.githubusercontent.com/Xenon-Trash/Loader/main/Loader.lua')){274948750000}
 
-task.spawn(function()
-    wait(100)
+local function Check()
+    print("[❕] Checking")
     if game.Players.LocalPlayer.PlayerGui:FindFirstChild('Anime Defenders') then
-        print("Check")
+        print("[❕] Running > True")
     else
         game.Players.LocalPlayer:Kick('Check Scripting')
     end
-end) 
+end
+
+task.spawn(function()
+    for i = 1, 100 do
+        print("[❕] Check ", i)
+        Check()
+        wait(1)
+    end
+end)
