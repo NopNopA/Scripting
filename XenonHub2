@@ -1,5 +1,6 @@
 repeat wait() until game:IsLoaded()
 wait(5) 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/NopNopA/Scripting/main/Check.lua"))()
 
 getgenv().Configuration = {
     ['Enabled'] = true,
@@ -11,4 +12,3 @@ getgenv().Configuration = {
     ['Leave Method'] = 2,
 };
 loadstring(game:HttpGet('https://raw.githubusercontent.com/Xenon-Trash/Loader/main/Loader.lua')){274948750000}
-loadstring(game:HttpGet("https://raw.githubusercontent.com/NopNopA/Scripting/main/Check.lua"))()
