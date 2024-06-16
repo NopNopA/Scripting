@@ -12,4 +12,5 @@ getgenv().Configuration = {
 };
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/NopNopA/Scripting/main/Check.lua"))()
-loadstring(game:HttpGet('https://raw.githubusercontent.com/Xenon-Trash/Loader/main/Loader.lua')){124945521347}
+getgenv().key = '124945521347'
+loadstring(game:HttpGet('https://raw.githubusercontent.com/Xenon-Trash/Loader/main/Loader.lua'))()
