@@ -1,12 +1,11 @@
-erepeat wait() until game:IsLoaded()
+repeat wait() until game:IsLoaded()
 wait(5) 
 if isfolder('Luarmor') then delfolder('Luarmor') end
-
 getgenv().Configuration = {
     ['Enabled'] = true,
     ['Enabled Challenge'] = false,
     ['PC Name'] = 'NopNopA',
-    ['Delay'] = 30,
+    ['Delay'] = 10,
     ['Leave Delay'] = 5,
     ['Leave At Wave'] = 31,
     ['Leave Method'] = 2,
