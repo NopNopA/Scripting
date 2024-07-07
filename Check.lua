@@ -1,4 +1,3 @@
-if isfolder('Luarmor') then delfolder('Luarmor') end
 for i = 1, 25 do
     print("[❕] Waiting Check", i)
     wait(1)
