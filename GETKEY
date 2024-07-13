@@ -1,0 +1,50 @@
+import requests
+import base64
+import time
+from flask import Flask, request, jsonify
+app = Flask(__name__)
+
+def Getkey(Link):
+    id = Link.split('id=')[1]
+    payload = {
+        "captcha": "",
+        "type": "Turnstile"
+    }
+    
+    requests.options(f"https://api-gateway.platoboost.com/v1/authenticators/8/{id}", json=payload)
+    requests.options(f"https://api-gateway.platoboost.com/v1/sessions/8/{id}", json=payload)
+    time.sleep(5)
+    
+    a = requests.post(f"https://api-gateway.platoboost.com/v1/sessions/auth/8/{id}")
+    out = a.json()
+    
+    if out.get("redirect"):
+        splitit = out["redirect"].replace("https://loot-link.com/s?fJjn&r=", "").replace("%3D", "=")
+        nextdata = str(base64.b64decode(splitit).decode('utf-8'))
+        
+        if nextdata:
+            splitit = nextdata.replace(f"https://gateway.platoboost.com/a/8?id={id}&tk=", "")
+            time.sleep(5)
+            w = requests.put(f"https://api-gateway.platoboost.com/v1/sessions/auth/8/{id}/{splitit}")
+            data = w.json()
+            
+            if data.get("redirect"):
+                data2 = requests.get(f"https://api-gateway.platoboost.com/v1/authenticators/8/{id}")
+                return data2.json().get("key")
+    
+    return None
+
+@app.route('/delta', methods=['GET'])
+def get_key_route():
+    link = request.args.get('link')
+    if not link:
+        return jsonify({"error": "Missing link parameter"}), 400
+    
+    key = Getkey(link)
+    if key:
+        return jsonify({"key": key})
+    else:
+        return jsonify({"error": "Failed to retrieve key"}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True)
