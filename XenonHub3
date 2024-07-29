@@ -1,16 +1,103 @@
-repeat wait() until game:IsLoaded()
-wait(5) 
-if isfolder('Luarmor') then delfolder('Luarmor') end
-
-getgenv().Configuration = {
-    ['Enabled'] = true,
-    ['Enabled Challenge'] = false,
-    ['PC Name'] = 'NopNopA',
-    ['Delay'] = 10,
-    ['Leave Delay'] = 5,
-    ['Leave At Wave'] = 31,
-    ['Leave Method'] = 2,
-};
-loadstring(game:HttpGet("https://raw.githubusercontent.com/NopNopA/Scripting/main/Check.lua"))()
-getgenv().key = '176631730912'
-loadstring(game:HttpGet('https://raw.githubusercontent.com/Xenon-Trash/Loader/main/Loader.lua'))()
+repeat task.wait() until game:IsLoaded()
+repeat task.wait() until game.Players
+repeat task.wait() until game.Players.LocalPlayer
+repeat task.wait() until game.Players.LocalPlayer:FindFirstChild("PlayerGui")
+repeat task.wait() until game.Players.LocalPlayer.PlayerGui:FindFirstChild("Main");
+_G.Team = "Pirate" 
+_G.LogsDes = {
+    ["Enabled"] = false,
+    ["SendAlias"] = false,
+    ["SendDescription"] = false, 
+    ["DelaySend"] = 5 
+}
+_G.WebHook = {
+    ["Enabled"] = false, 
+    ["Url"] = "", 
+    ["Delay"] = 60 
+}
+_G.MainSettings = {
+        ["EnabledHOP"] = true, 
+        ['FPSBOOST'] = true, 
+        ["FPSLOCKAMOUNT"] = 60, 
+        ['WhiteScreen'] = true,
+        ['CloseUI'] = true, 
+        ["NotifycationExPRemove"] = true, 
+        ['AFKCheck'] = 150,
+        ["LockFragments"] = 2000000, 
+        ["LockFruitsRaid"] = { 
+            [1] = "Kitsune-Kitsune"
+        }
+    }
+_G.Fruits_Settings = { 
+    ['Main_Fruits'] = {'Dough-Dough', 'Sound-Sound'}, 
+    ['Select_Fruits'] = {"Ice-Ice", "Dragon-Dragon", "Rumble-Rumble", "Magma-Magma", "Mammoth-Mammoth", "Sound-Sound"} 
+}
+_G.Quests_Settings = { 
+    ['Rainbow_Haki'] = true,
+    ["MusketeerHat"] = true,
+    ["PullLever"] = true,
+    ['DoughQuests_Mirror'] = {
+        ['Enabled'] = true,
+        ['UseFruits'] = true
+    }        
+}
+_G.Races_Settings = { 
+    ['Race'] = {
+        ['EnabledEvo'] = true,
+        ["v2"] = true,
+        ["v3"] = true,
+        ["Races_Lock"] = {
+            ["Races"] = { 
+                ["Mink"] = true,
+                ["Human"] = true,
+                ["Fishman"] = true
+            },
+            ["RerollsWhenFragments"] = 20000 
+        }
+    }
+}
+_G.Settings_Melee = { 
+    ['Superhuman'] = true,
+    ['DeathStep'] = true,
+    ['SharkmanKarate'] = true,
+    ['ElectricClaw'] = true,
+    ['DragonTalon'] = true,
+    ['Godhuman'] = true
+}
+_G.FarmMastery_Settings = {
+    ['Melee'] = true,
+    ['Sword'] = true,
+    ['DevilFruits'] = true,
+    ['Select_Swords'] = {
+        ["AutoSettings"] = true,
+        ["ManualSettings"] = {}
+    }
+}
+_G.SwordSettings = { 
+    ['Saber'] = true,
+    ["Pole"] = true,
+    ['MidnightBlade'] = true,
+    ['Shisui'] = true,
+    ['Saddi'] = true,
+    ['Wando'] = true,
+    ['Yama'] = true,
+    ['Rengoku'] = true,
+    ['Canvander'] = true,
+    ['BuddySword'] = true,
+    ['TwinHooks'] = true,
+    ['HallowScryte'] = true,
+    ['TrueTripleKatana'] = true,
+    ['CursedDualKatana'] = true
+}
+_G.SharkAnchor_Settings = {
+    ["Enabled_Farm"] = true,
+}
+_G.GunSettings = { 
+    ['Kabucha'] = true,
+    ['SerpentBow'] = true,
+    ['SoulGuitar'] = true
+}
+getgenv().Key = "MARU-LB4FY-H0OUP-OH4I-VW57N-GJYX"
+getgenv().id = "882221489951236146"
+getgenv().Script_Mode = "Kaitun_Script"
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
