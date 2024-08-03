@@ -8,13 +8,28 @@ local WSConnect = syn and syn.websocket.connect or
 repeat task.wait() until game:IsLoaded()
 
 local socket
-local success, err = pcall(function()
-    socket = WSConnect("ws://localhost:4812/ws")
-end)
 
-if not success then
-    warn("[ERROR] WebSocket failed to connect: " .. tostring(err))
-    return
+local function isSocketConnected()
+    return socket and socket.Connected
+end
+
+local function connectWebSocket()
+    if isSocketConnected() then
+        return
+    end
+    
+    local success, err = pcall(function()
+        socket = WSConnect("ws://localhost:4812/ws")
+    end)
+
+    if not success then
+        warn("[ERROR] WebSocket failed to connect: " .. tostring(err))
+        task.wait(5) 
+        connectWebSocket()  
+    else
+        print("WebSocket connected")
+        setupSocketEvents()
+    end
 end
 
 local function closeSocket()
@@ -25,36 +40,53 @@ local function closeSocket()
     end
 end
 
-socket.OnClose:Connect(function()
-    print("WebSocket closed by server")
-    closeSocket()
-end)
-
-Players.LocalPlayer.AncestryChanged:Connect(function()
-    if not Players.LocalPlayer:IsDescendantOf(game) then
+local function setupSocketEvents()
+    socket.OnClose:Connect(function()
+        print("WebSocket closed by server")
         closeSocket()
+        task.wait(5) 
+        connectWebSocket()  
+    end)
+
+    Players.LocalPlayer.AncestryChanged:Connect(function()
+        if not Players.LocalPlayer:IsDescendantOf(game) then
+            closeSocket()
+        end
+    end)
+
+    socket.OnMessage:Connect(function(message)
+        local data = HttpService:JSONDecode(message)
+        if data["d"] == 0 then
+            print("Connected")
+        elseif data["d"] == 1 then
+            print("Acknowledged")
+        end
+    end)
+
+    local success, err = pcall(function()
+        socket:Send(HttpService:JSONEncode({
+            ['a'] = 0,
+            ['d'] = {
+                ['u'] = game.Players.LocalPlayer.Name
+            }
+        }))
+    end)
+
+    if not success then
+        warn("[ERROR] Failed to send initial message: " .. tostring(err))
+        closeSocket()
+        task.wait(5)  
+        connectWebSocket()  
     end
-end)
-
-socket.OnMessage:Connect(function(message)
-    local data = HttpService:JSONDecode(message)
-    if data["d"] == 0 then
-        print("Connected")
-    elseif data["d"] == 1 then
-        print("Acknowledged")
-    end
-end)
-
-local success, err = pcall(function()
-    socket:Send(HttpService:JSONEncode({
-        ['a'] = 0,
-        ['d'] = {
-            ['u'] = game.Players.LocalPlayer.Name
-        }
-    }))
-end)
-
-if not success then
-    warn("[ERROR] Failed to send initial message: " .. tostring(err))
-    closeSocket()
 end
+
+connectWebSocket()
+task.spawn(function()
+    while true do
+        task.wait(10)  
+        if not isSocketConnected() then
+            warn("[WARNING] WebSocket not connected, attempting to reconnect...")
+            connectWebSocket()
+        end
+    end
+end)
