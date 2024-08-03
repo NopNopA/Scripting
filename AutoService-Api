@@ -1,0 +1,60 @@
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+
+local WSConnect = syn and syn.websocket.connect or
+    (Krnl and (function() repeat task.wait() until Krnl.WebSocket and Krnl.WebSocket.connect return Krnl.WebSocket.connect end)()) or
+    WebSocket and WebSocket.connect
+
+repeat task.wait() until game:IsLoaded()
+
+local socket
+local success, err = pcall(function()
+    socket = WSConnect("ws://localhost:4812/ws")
+end)
+
+if not success then
+    warn("[ERROR] WebSocket failed to connect: " .. tostring(err))
+    return
+end
+
+local function closeSocket()
+    if socket then
+        socket:Close()
+        socket = nil
+        print("WebSocket connection closed")
+    end
+end
+
+socket.OnClose:Connect(function()
+    print("WebSocket closed by server")
+    closeSocket()
+end)
+
+Players.LocalPlayer.AncestryChanged:Connect(function()
+    if not Players.LocalPlayer:IsDescendantOf(game) then
+        closeSocket()
+    end
+end)
+
+socket.OnMessage:Connect(function(message)
+    local data = HttpService:JSONDecode(message)
+    if data["d"] == 0 then
+        print("Connected")
+    elseif data["d"] == 1 then
+        print("Acknowledged")
+    end
+end)
+
+local success, err = pcall(function()
+    socket:Send(HttpService:JSONEncode({
+        ['a'] = 0,
+        ['d'] = {
+            ['u'] = game.Players.LocalPlayer.Name
+        }
+    }))
+end)
+
+if not success then
+    warn("[ERROR] Failed to send initial message: " .. tostring(err))
+    closeSocket()
+end
