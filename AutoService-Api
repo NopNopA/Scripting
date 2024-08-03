@@ -13,28 +13,9 @@ local function isSocketConnected()
     return socket and socket.Connected
 end
 
-local function connectWebSocket()
-    if isSocketConnected() then
-        return
-    end
-    
-    local success, err = pcall(function()
-        socket = WSConnect("ws://localhost:4812/ws")
-    end)
-
-    if not success then
-        warn("[ERROR] WebSocket failed to connect: " .. tostring(err))
-        task.wait(5) 
-        connectWebSocket()  
-    else
-        print("WebSocket connected")
-        setupSocketEvents()
-    end
-end
-
 local function closeSocket()
     if socket then
-        socket:Close()
+        pcall(function() socket:Close() end)
         socket = nil
         print("WebSocket connection closed")
     end
@@ -44,8 +25,8 @@ local function setupSocketEvents()
     socket.OnClose:Connect(function()
         print("WebSocket closed by server")
         closeSocket()
-        task.wait(5) 
-        connectWebSocket()  
+        task.wait(5)
+        connectWebSocket() 
     end)
 
     Players.LocalPlayer.AncestryChanged:Connect(function()
@@ -75,15 +56,34 @@ local function setupSocketEvents()
     if not success then
         warn("[ERROR] Failed to send initial message: " .. tostring(err))
         closeSocket()
-        task.wait(5)  
-        connectWebSocket()  
+        task.wait(5) 
+        connectWebSocket() 
+    end
+end
+
+local function connectWebSocket()
+    if isSocketConnected() then
+        return
+    end
+    
+    local success, err = pcall(function()
+        socket = WSConnect("ws://localhost:4812/ws")
+    end)
+
+    if not success then
+        warn("[ERROR] WebSocket failed to connect: " .. tostring(err))
+        task.wait(5) 
+        connectWebSocket() 
+    else
+        print("WebSocket connected")
+        setupSocketEvents()
     end
 end
 
 connectWebSocket()
 task.spawn(function()
     while true do
-        task.wait(10)  
+        task.wait(5)  
         if not isSocketConnected() then
             warn("[WARNING] WebSocket not connected, attempting to reconnect...")
             connectWebSocket()
