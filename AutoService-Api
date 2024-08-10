@@ -1,34 +1,41 @@
 local HttpService = game:GetService("HttpService")
-local WSConnect = syn and syn.websocket.connect or
-    (Krnl and (function() repeat task.wait() until Krnl.WebSocket and Krnl.WebSocket.connect return Krnl.WebSocket.connect end)()) or
-    WebSocket and WebSocket.connect
-repeat task.wait() until game:IsLoaded()
+local Request = (syn and syn.request) or request or (http and http.request) or http_request
+local username = game.Players.LocalPlayer.Name
 
-local socket = WSConnect("ws://localhost:4812/ws")
+while true do
+    game.CoreGui.RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(v)
+        if v.Name == "ErrorPrompt" then 
+            pcall(function()
+                repeat wait(.5) until game.CoreGui.RobloxPromptGui.promptOverlay.ErrorPrompt.MessageArea.ErrorFrame:FindFirstChild("ErrorMessage")
+                if tonumber(game.CoreGui.RobloxPromptGui.promptOverlay.ErrorPrompt.MessageArea.ErrorFrame.ErrorMessage.Text:split("\n")[2]:match("%d+")) ~= 772 and tonumber(game.CoreGui.RobloxPromptGui.promptOverlay.ErrorPrompt.MessageArea.ErrorFrame.ErrorMessage.Text:split("\n")[2]:match("%d+")) ~= 773 then
+                    break
+                end
+            end)
+        end
+    end) 
 
-socket.OnMessage:Connect(function(message)
-    local data = HttpService:JSONDecode(message)
-    if data["d"] == 0 then
-        print("Connected")
-    elseif data["d"] == 1 then
-        print("Acknowledged")
-        task.spawn(function()
-            while true do
-                task.wait(25)
-                socket:Send(HttpService:JSONEncode({
-                    ['a'] = 0,
-                    ['d'] = {
-                        ['u'] = game.Players.LocalPlayer.Name
-                    }
-                }))
-            end
-        end)
-    end
-end)
+    local url = "http://localhost:5000/"
+    local data = "username=" .. username
 
-socket:Send(HttpService:JSONEncode({
-    ['a'] = 0,
-    ['d'] = {
-        ['u'] = game.Players.LocalPlayer.Name
+    local requestData = {
+        Url = url,
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/x-www-form-urlencoded"
+        },
+        Body = data
     }
-}))
+
+    local success, response = pcall(function()
+        return Request(requestData)
+    end)
+
+    if success and response.StatusCode == 200 then
+        print("Status updated for user: " .. username)
+    else
+        warn("Failed to update status: " .. (response and response.StatusCode or "Request failed"))
+    end
+
+    wait(20) 
+end
+
