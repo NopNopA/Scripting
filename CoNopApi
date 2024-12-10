@@ -53,9 +53,8 @@ local function updateStatus()
     end
 end
 
-local FpsURL = "https://raw.githubusercontent.com/NopNopA/Scripting/refs/heads/main/Fps.lua"
-loadstring(game:HttpGet(FpsURL))()
 local Round = 0
+wait(2)
 
 while true do
     globalFunc = checkForError()
