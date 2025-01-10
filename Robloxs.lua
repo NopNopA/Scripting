@@ -66,5 +66,5 @@ while true do
     end
     Round = Round + 1
     print("----------------------------------------")
-    wait(20)
+    wait(15)
 end
