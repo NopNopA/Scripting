@@ -6,7 +6,7 @@ local globalFunc = false
 
 game.StarterGui:SetCore("SendNotification", {
     Title = 'API SERVICES',
-    Text = 'User : ' .. username,
+    Text = 'Pls Update Services',
     Duration = 25,
     Icon = 'rbxassetid://18976336309'
 })
