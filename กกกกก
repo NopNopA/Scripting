@@ -1,0 +1,222 @@
+repeat task.wait(1) until game:IsLoaded() and game.Players.LocalPlayer
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local UIS = game:GetService("UserInputService")
+local Player = game.Players.LocalPlayer
+
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local TpButton = Instance.new("TextButton")
+local SliderBackground = Instance.new("Frame")
+local SliderBar = Instance.new("Frame")
+local SliderButton = Instance.new("TextButton")
+local ValueLabel = Instance.new("TextLabel")
+local SpeedText = Instance.new("TextLabel")
+
+local minSpeed = 50
+local maxSpeed = 200
+local defaultSpeed = 100
+
+ScreenGui.Name = "NopNop"
+ScreenGui.Parent = game.CoreGui
+ScreenGui.ResetOnSpawn = false
+
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+MainFrame.BackgroundTransparency = 0.1
+MainFrame.Position = UDim2.new(0.5, -125, 0.4, -75)
+MainFrame.Size = UDim2.new(0, 250, 0, 180)
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 15)
+MainCorner.Parent = MainFrame
+
+local MainStroke = Instance.new("UIStroke")
+MainStroke.Color = Color3.fromRGB(255, 170, 0)
+MainStroke.Thickness = 2
+MainStroke.Parent = MainFrame
+
+Title.Parent = MainFrame
+Title.BackgroundTransparency = 1
+Title.Position = UDim2.new(0, 0, 0, 10)
+Title.Size = UDim2.new(1, 0, 0, 30)
+Title.Font = Enum.Font.GothamBold
+Title.Text = "NopNop's Shop"
+Title.TextColor3 = Color3.fromRGB(255, 170, 0)
+Title.TextSize = 22
+
+TpButton.Name = "TpButton"
+TpButton.Parent = MainFrame
+TpButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+TpButton.Position = UDim2.new(0.1, 0, 0.28, 0)
+TpButton.Size = UDim2.new(0.8, 0, 0, 35)
+TpButton.Font = Enum.Font.GothamBold
+TpButton.Text = "TP to WWW"
+TpButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+TpButton.TextSize = 14
+
+local ButtonCorner = Instance.new("UICorner")
+ButtonCorner.CornerRadius = UDim.new(0, 8)
+ButtonCorner.Parent = TpButton
+
+SpeedText.Parent = MainFrame
+SpeedText.BackgroundTransparency = 1
+SpeedText.Position = UDim2.new(0.1, 0, 0.55, 0)
+SpeedText.Size = UDim2.new(0, 100, 0, 20)
+SpeedText.Font = Enum.Font.Gotham
+SpeedText.Text = "Walk Speed:"
+SpeedText.TextColor3 = Color3.fromRGB(200, 200, 200)
+SpeedText.TextSize = 12
+SpeedText.TextXAlignment = Enum.TextXAlignment.Left
+
+ValueLabel.Parent = MainFrame
+ValueLabel.BackgroundTransparency = 1
+ValueLabel.Position = UDim2.new(0.5, 0, 0.55, 0)
+ValueLabel.Size = UDim2.new(0.4, 0, 0, 20)
+ValueLabel.Font = Enum.Font.GothamBold
+ValueLabel.Text = tostring(defaultSpeed)
+ValueLabel.TextColor3 = Color3.fromRGB(255, 170, 0)
+ValueLabel.TextSize = 16
+ValueLabel.TextXAlignment = Enum.TextXAlignment.Right
+
+SliderBackground.Name = "SliderBackground"
+SliderBackground.Parent = MainFrame
+SliderBackground.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+SliderBackground.Position = UDim2.new(0.1, 0, 0.75, 0)
+SliderBackground.Size = UDim2.new(0.8, 0, 0, 6)
+
+local SliderCorner = Instance.new("UICorner")
+SliderCorner.CornerRadius = UDim.new(1, 0)
+SliderCorner.Parent = SliderBackground
+
+SliderBar.Name = "SliderBar"
+SliderBar.Parent = SliderBackground
+SliderBar.BackgroundColor3 = Color3.fromRGB(255, 170, 0)
+SliderBar.Size = UDim2.new(0.5, 0, 1, 0)
+
+local BarCorner = Instance.new("UICorner")
+BarCorner.CornerRadius = UDim.new(1, 0)
+BarCorner.Parent = SliderBar
+
+SliderButton.Name = "SliderButton"
+SliderButton.Parent = SliderBackground
+SliderButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+SliderButton.Position = UDim2.new(0.5, -8, 0.5, -8)
+SliderButton.Size = UDim2.new(0, 16, 0, 16)
+SliderButton.Text = ""
+
+local KnobCorner = Instance.new("UICorner")
+KnobCorner.CornerRadius = UDim.new(1, 0)
+KnobCorner.Parent = SliderButton
+
+local dragging = false
+local isTweening = false
+
+local function ApplySpeed()
+    local targetSpeed = tonumber(ValueLabel.Text) or defaultSpeed
+    if Player.Character and Player.Character:FindFirstChild("Humanoid") then
+        Player.Character.Humanoid.WalkSpeed = targetSpeed
+    end
+end
+
+local function updateSlider(input)
+    local pos = math.clamp((input.Position.X - SliderBackground.AbsolutePosition.X) / SliderBackground.AbsoluteSize.X, 0, 1)
+    SliderBar.Size = UDim2.new(pos, 0, 1, 0)
+    SliderButton.Position = UDim2.new(pos, -8, 0.5, -8)
+    
+    local finalSpeed = math.floor(minSpeed + (pos * (maxSpeed - minSpeed)))
+    ValueLabel.Text = tostring(finalSpeed)
+    ApplySpeed()
+end
+
+SliderButton.MouseButton1Down:Connect(function() dragging = true end)
+UIS.InputChanged:Connect(function(input)
+    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        updateSlider(input)
+    end
+end)
+UIS.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end
+end)
+
+TpButton.MouseButton1Click:Connect(function()
+    if isTweening then return end
+    
+    local char = Player.Character
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+    if not root then return end
+
+    isTweening = true
+    TpButton.Text = "TELEPORTING..."
+    TpButton.BackgroundColor3 = Color3.fromRGB(100, 50, 0)
+
+    local targetCFrame = CFrame.new(-519.878357, 19.4365158, -520.073486, -0.848503113, -2.54526036e-08, -0.529190421, -8.01384648e-16, 1, -4.80972489e-08, 0.529190421, -4.08106615e-08, -0.848503113)
+    local distance = (targetCFrame.Position - root.Position).Magnitude
+    local duration = 1
+
+    local bV = Instance.new("BodyVelocity")
+    bV.Velocity = Vector3.new(0, 0, 0)
+    bV.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+    bV.Parent = root
+
+    local bG = Instance.new("BodyGyro")
+    bG.P = 9e4
+    bG.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
+    bG.CFrame = root.CFrame
+    bG.Parent = root
+
+    local noclipLoop = RunService.Stepped:Connect(function()
+        for _, part in pairs(char:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = false
+            end
+        end
+    end)
+
+    local tween = TweenService:Create(root, TweenInfo.new(duration, Enum.EasingStyle.Linear), {CFrame = targetCFrame})
+    tween:Play()
+
+    tween.Completed:Connect(function()
+        noclipLoop:Disconnect()
+        bV:Destroy()
+        bG:Destroy()
+        
+        for _, part in pairs(char:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = true
+            end
+        end
+        
+        isTweening = false
+        TpButton.Text = "TP to WWW"
+        TpButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+        ApplySpeed()
+    end)
+end)
+
+local function SetupSpeedLock(char)
+    local hum = char:WaitForChild("Humanoid")
+    hum:GetPropertyChangedSignal("WalkSpeed"):Connect(function()
+        local desired = tonumber(ValueLabel.Text) or defaultSpeed
+        if hum.WalkSpeed ~= desired and not isTweening then
+            hum.WalkSpeed = desired
+        end
+    end)
+    
+    ApplySpeed()
+end
+
+Player.CharacterAdded:Connect(SetupSpeedLock)
+if Player.Character then SetupSpeedLock(Player.Character) end
+
+UIS.InputBegan:Connect(function(input, gpe)
+    if not gpe and input.KeyCode == Enum.KeyCode.LeftControl then
+        MainFrame.Visible = not MainFrame.Visible
+    end
+end)
+
+print("NopNop Shop Loaded Successfully!")
