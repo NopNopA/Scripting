@@ -8,7 +8,7 @@ local ScreenGui = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
 local Title = Instance.new("TextLabel")
 local TpButton = Instance.new("TextButton")
-local InvisButton = Instance.new("TextButton")
+local InvisButton = Instance.new("TextButton") 
 local SliderBackground = Instance.new("Frame")
 local SliderBar = Instance.new("Frame")
 local SliderButton = Instance.new("TextButton")
@@ -18,7 +18,6 @@ local SpeedText = Instance.new("TextLabel")
 local minSpeed = 50
 local maxSpeed = 200
 local defaultSpeed = 100
-local isInvisible = false -- สถานะล่องหน
 
 ScreenGui.Name = "NopNop"
 ScreenGui.Parent = game.CoreGui
@@ -29,7 +28,7 @@ MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 MainFrame.BackgroundTransparency = 0.1
 MainFrame.Position = UDim2.new(0.5, -125, 0.4, -75)
-MainFrame.Size = UDim2.new(0, 250, 0, 220)
+MainFrame.Size = UDim2.new(0, 250, 0, 220) 
 MainFrame.Active = true
 MainFrame.Draggable = true
 
@@ -55,12 +54,11 @@ TpButton.Name = "TpButton"
 TpButton.Parent = MainFrame
 TpButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 TpButton.Position = UDim2.new(0.1, 0, 0.25, 0)
-TpButton.Size = UDim2.new(0.8, 0, 0, 30)
+TpButton.Size = UDim2.new(0.8, 0, 0, 35)
 TpButton.Font = Enum.Font.GothamBold
 TpButton.Text = "TP to WWW"
 TpButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 TpButton.TextSize = 14
-
 local ButtonCorner = Instance.new("UICorner")
 ButtonCorner.CornerRadius = UDim.new(0, 8)
 ButtonCorner.Parent = TpButton
@@ -68,20 +66,49 @@ ButtonCorner.Parent = TpButton
 InvisButton.Name = "InvisButton"
 InvisButton.Parent = MainFrame
 InvisButton.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
-InvisButton.Position = UDim2.new(0.1, 0, 0.42, 0)
-InvisButton.Size = UDim2.new(0.8, 0, 0, 30)
+InvisButton.Position = UDim2.new(0.1, 0, 0.45, 0)
+InvisButton.Size = UDim2.new(0.8, 0, 0, 35)
 InvisButton.Font = Enum.Font.GothamBold
 InvisButton.Text = "Invisible: OFF"
 InvisButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 InvisButton.TextSize = 14
-
 local InvisCorner = Instance.new("UICorner")
 InvisCorner.CornerRadius = UDim.new(0, 8)
 InvisCorner.Parent = InvisButton
 
+
+local function InvisibleFE()
+    local char = Player.Character
+    if not char then return end
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    if not hum then return end
+
+    for _, v in pairs(char:GetDescendants()) do
+        if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" then
+            v:Destroy()
+        elseif v:IsA("Accessory") or v:IsA("Decal") then
+            v:Destroy()
+        end
+    end
+end
+
+InvisButton.MouseButton1Click:Connect(function()
+    if InvisButton.Text == "Invisible: OFF" then
+        InvisButton.Text = "Invisible: ON"
+        InvisButton.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+        InvisibleFE()
+    else
+        InvisButton.Text = "Reset to Visible"
+        InvisButton.BackgroundColor3 = Color3.fromRGB(150, 150, 150)
+        task.wait(1)
+        InvisButton.Text = "Invisible: OFF"
+        InvisButton.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
+    end
+end)
+
 SpeedText.Parent = MainFrame
 SpeedText.BackgroundTransparency = 1
-SpeedText.Position = UDim2.new(0.1, 0, 0.62, 0)
+SpeedText.Position = UDim2.new(0.1, 0, 0.65, 0)
 SpeedText.Size = UDim2.new(0, 100, 0, 20)
 SpeedText.Font = Enum.Font.Gotham
 SpeedText.Text = "Walk Speed:"
@@ -91,7 +118,7 @@ SpeedText.TextXAlignment = Enum.TextXAlignment.Left
 
 ValueLabel.Parent = MainFrame
 ValueLabel.BackgroundTransparency = 1
-ValueLabel.Position = UDim2.new(0.5, 0, 0.62, 0)
+ValueLabel.Position = UDim2.new(0.5, 0, 0.65, 0)
 ValueLabel.Size = UDim2.new(0.4, 0, 0, 20)
 ValueLabel.Font = Enum.Font.GothamBold
 ValueLabel.Text = tostring(defaultSpeed)
@@ -102,65 +129,27 @@ ValueLabel.TextXAlignment = Enum.TextXAlignment.Right
 SliderBackground.Name = "SliderBackground"
 SliderBackground.Parent = MainFrame
 SliderBackground.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-SliderBackground.Position = UDim2.new(0.1, 0, 0.80, 0)
+SliderBackground.Position = UDim2.new(0.1, 0, 0.82, 0)
 SliderBackground.Size = UDim2.new(0.8, 0, 0, 6)
-
 local SliderCorner = Instance.new("UICorner")
 SliderCorner.CornerRadius = UDim.new(1, 0)
 SliderCorner.Parent = SliderBackground
-
 SliderBar.Name = "SliderBar"
 SliderBar.Parent = SliderBackground
 SliderBar.BackgroundColor3 = Color3.fromRGB(255, 170, 0)
 SliderBar.Size = UDim2.new(0.5, 0, 1, 0)
-
 local BarCorner = Instance.new("UICorner")
 BarCorner.CornerRadius = UDim.new(1, 0)
 BarCorner.Parent = SliderBar
-
 SliderButton.Name = "SliderButton"
 SliderButton.Parent = SliderBackground
 SliderButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 SliderButton.Position = UDim2.new(0.5, -8, 0.5, -8)
 SliderButton.Size = UDim2.new(0, 16, 0, 16)
 SliderButton.Text = ""
-
 local KnobCorner = Instance.new("UICorner")
 KnobCorner.CornerRadius = UDim.new(1, 0)
 KnobCorner.Parent = SliderButton
-
-local function ApplyInvisibility(state)
-    local character = Player.Character
-    if not character then return end
-    
-    local transparency = state and 1 or 0
-    
-    for _, part in pairs(character:GetDescendants()) do
-        if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
-            part.Transparency = transparency
-        elseif part:IsA("Decal") then
-            part.Transparency = transparency
-        end
-    end
-end
-
-InvisButton.MouseButton1Click:Connect(function()
-    isInvisible = not isInvisible
-    if isInvisible then
-        InvisButton.Text = "Invisible: ON"
-        InvisButton.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
-        ApplyInvisibility(true)
-    else
-        InvisButton.Text = "Invisible: OFF"
-        InvisButton.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
-        ApplyInvisibility(false)
-    end
-end)
-
-Player.CharacterAdded:Connect(function(char)
-    task.wait(0.5)
-    if isInvisible then ApplyInvisibility(true) end
-end)
 
 local dragging = false
 local isTweening = false
@@ -183,9 +172,7 @@ end
 
 SliderButton.MouseButton1Down:Connect(function() dragging = true end)
 UIS.InputChanged:Connect(function(input)
-    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-        updateSlider(input)
-    end
+    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then updateSlider(input) end
 end)
 UIS.InputEnded:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end
@@ -196,45 +183,13 @@ TpButton.MouseButton1Click:Connect(function()
     local char = Player.Character
     local root = char and char:FindFirstChild("HumanoidRootPart")
     if not root then return end
-
     isTweening = true
     TpButton.Text = "TELEPORTING..."
     TpButton.BackgroundColor3 = Color3.fromRGB(100, 50, 0)
-
     local targetCFrame = CFrame.new(-519.878357, 19.4365158, -520.073486, -0.848503113, -2.54526036e-08, -0.529190421, -8.01384648e-16, 1, -4.80972489e-08, 0.529190421, -4.08106615e-08, -0.848503113)
-    local duration = 1
-
-    local bV = Instance.new("BodyVelocity")
-    bV.Velocity = Vector3.new(0, 0, 0)
-    bV.MaxForce = Vector3.new(9e9, 9e9, 9e9)
-    bV.Parent = root
-
-    local bG = Instance.new("BodyGyro")
-    bG.P = 9e4
-    bG.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
-    bG.CFrame = root.CFrame
-    bG.Parent = root
-
-    local noclipLoop = RunService.Stepped:Connect(function()
-        for _, part in pairs(char:GetDescendants()) do
-            if part:IsA("BasePart") then
-                part.CanCollide = false
-            end
-        end
-    end)
-
-    local tween = TweenService:Create(root, TweenInfo.new(duration, Enum.EasingStyle.Linear), {CFrame = targetCFrame})
+    local tween = TweenService:Create(root, TweenInfo.new(1, Enum.EasingStyle.Linear), {CFrame = targetCFrame})
     tween:Play()
-
     tween.Completed:Connect(function()
-        noclipLoop:Disconnect()
-        bV:Destroy()
-        bG:Destroy()
-        for _, part in pairs(char:GetDescendants()) do
-            if part:IsA("BasePart") then
-                part.CanCollide = true
-            end
-        end
         isTweening = false
         TpButton.Text = "TP to WWW"
         TpButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
@@ -246,9 +201,7 @@ local function SetupSpeedLock(char)
     local hum = char:WaitForChild("Humanoid")
     hum:GetPropertyChangedSignal("WalkSpeed"):Connect(function()
         local desired = tonumber(ValueLabel.Text) or defaultSpeed
-        if hum.WalkSpeed ~= desired and not isTweening then
-            hum.WalkSpeed = desired
-        end
+        if hum.WalkSpeed ~= desired and not isTweening then hum.WalkSpeed = desired end
     end)
     ApplySpeed()
 end
